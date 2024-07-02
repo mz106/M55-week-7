@@ -35,7 +35,21 @@ const Book = mongoose.model("Book", bookSchema);
 // Book model ends===========
 
 // getAllBooks
-app.get("/books/getAllBooks", (request, response) => {});
+app.get("/books/getAllBooks", async (request, response) => {
+  // step1: db interaction
+
+  const allBooks = await Book.find({});
+
+  // step2: create success object
+  const successResponse = {
+    message: "success",
+    allBooks: allBooks,
+  };
+
+  // step 3: send response
+
+  response.send(successResponse);
+});
 
 // addBook
 app.post("/books/addBook", async (request, response) => {
@@ -53,7 +67,9 @@ app.post("/books/addBook", async (request, response) => {
   response.send(successResponse);
 });
 
-//update a book's author by title
+// update a book's author by title
+// update by title
+//  you'll need a filter (title) and a new author value (newAuthor)
 app.put("/books", (request, response) => {});
 
 // delete a book by title
