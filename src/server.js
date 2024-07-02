@@ -1,10 +1,108 @@
 const express = require("express");
+const { execPath } = require("process");
 
 const app = express();
 
-app.use("/example", express.static("example"));
+app.use(express.json());
 
-app.use("/dave", () => console.log("hello dave"));
+const fakeData = [
+  { id: 1, title: "book1", author: "author1", genre: "genre1" },
+  { id: 2, title: "book2", author: "author2", genre: "genre2" },
+  { id: 3, title: "book3", author: "author3", genre: "genre3" },
+];
+
+// example
+app.get("/books", (request, response) => {
+  //   console.log(request.path, " :", typeof request.path);
+  //   console.log(response);
+  response.send("Hello from /books");
+});
+
+// getAllBooks
+app.get("/books/getAllBooks", (request, response) => {
+  //   console.log(request.path);
+
+  const successResponse = {
+    message: "success",
+    books: fakeData,
+  };
+
+  response.send(successResponse);
+});
+
+// addBook
+app.post("/books/addBook", (request, response) => {
+  //   console.log(request.body);
+
+  fakeData.push(request.body);
+
+  const successResponse = {
+    message: "success",
+    books: fakeData,
+  };
+
+  response.send(successResponse);
+});
+
+app.put("/books", (request, response) => {
+  // in here, find a book by title (i.e. an element of fakeArr where the element title is the same as request.body.title)
+  // change (update) the author to an new name
+  console.log(request.body);
+  function findBook(book) {
+    let bookTitle;
+    if (book.title === request.body.title) {
+      bookTitle = book.title;
+    }
+
+    return bookTitle;
+
+    // return book.title === request.body.title;
+  }
+
+  const index = fakeData.findIndex(findBook);
+  console.log("book index in fakeArr: ", index);
+
+  if (index === -1) {
+    const failureResponse = {
+      message: `${request.body.title} not found`,
+    };
+    response.send(failureResponse);
+    return;
+  }
+
+  fakeData[index].title = request.body.newTitle;
+
+  const successResponse = {
+    message: "success",
+    books: fakeData[index],
+  };
+
+  response.send(successResponse);
+});
+
+app.delete("/books", (request, response) => {
+  // in here, find a book by title (i.e. an element of fakeArr where the element title is the same as request.body.title)
+  // remove (delete) the element from the array
+
+  const index = fakeData.findIndex((book) => book.title === request.body.title);
+
+  if (index === -1) {
+    const failureResponse = {
+      message: `${resuest.body.title} not found`,
+    };
+    response.send(failureResponse);
+    return;
+  }
+
+  fakeData.splice(index, 1);
+
+  const successResponse = {
+    message: "success",
+    books: fakeData,
+  };
+
+  response.send(successResponse);
+});
 
 app.listen(5001, () => {
   console.log(`Server is listening of port 5001`);
