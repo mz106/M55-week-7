@@ -48,11 +48,19 @@ app.put("/books", (request, response) => {
   // in here, find a book by title (i.e. an element of fakeArr where the element title is the same as request.body.title)
   // change (update) the author to an new name
   console.log(request.body);
-  function findBook(x) {
-    return x.title === request.body.title;
+  function findBook(book) {
+    let bookTitle;
+    if (book.title === request.body.title) {
+      bookTitle = book.title;
+    }
+
+    return bookTitle;
+
+    // return book.title === request.body.title;
   }
 
   const index = fakeData.findIndex(findBook);
+  console.log("book index in fakeArr: ", index);
 
   if (index === -1) {
     const failureResponse = {
