@@ -1,9 +1,11 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 const connection = async () => {
@@ -38,12 +40,12 @@ const Book = mongoose.model("Book", bookSchema);
 app.get("/books/getAllBooks", async (request, response) => {
   // step1: db interaction
 
-  const allBooks = await Book.find({});
+  const books = await Book.find({});
 
   // step2: create success object
   const successResponse = {
     message: "success",
-    allBooks: allBooks,
+    books: books,
   };
 
   // step 3: send response
